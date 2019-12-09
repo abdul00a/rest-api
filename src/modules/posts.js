@@ -32,8 +32,19 @@ const updatePosts = value => {
   }
 };
 
-const del = id => {
-  return client.query('delete from posttbl where id = $1', [id]);
+const del = async id => {
+  try {
+    const singlePostObj = await getPostsById(id);
+    if (singlePostObj.rows.length !== 0) {
+      const deldata = await client.query('delete from posttbl where id = $1', [
+        id
+      ]);
+      return deldata;
+    }
+    throw new Error('Data is already deleted');
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 module.exports = {

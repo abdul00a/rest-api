@@ -62,9 +62,13 @@ const updatePost = (req, res, next) => {
     });
 };
 
-const deletePost = (req, res) => {
+const deletePost = (req, res, next) => {
   const { id } = req.params;
-  del(id).then(() => res.send('delete post successfully'));
+  del(id)
+    .then(() => res.send('delete post successfully'))
+    .catch(err => {
+      return next({ message: `${err}`, statusCode: 400 });
+    });
 };
 
 module.exports = {
