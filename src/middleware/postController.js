@@ -6,13 +6,40 @@ const {
   del
 } = require('../modules/posts');
 
-const getAllPost = (req, res) => {
-  getPosts().then(val => res.send(val));
+const getAllPost = (req, res, next) => {
+  getPosts()
+    .then(allVal => {
+      if (allVal.rows.length !== 0) {
+        res.send(allVal.rows);
+      } else {
+        throw new Error(
+          next({
+            message: 'Right now there is no Author is avilable',
+            statusCode: 404
+          })
+        );
+      }
+    })
+    .catch(err => {
+      return next({ message: `${err} in query`, statusCode: 400 });
+    });
 };
 
-const getpostById = (req, res) => {
+const getpostById = (req, res, next) => {
   const { id } = req.params;
-  getPostsById(id).then(singleVal => res.send(singleVal.rows));
+  getPostsById(id)
+    .then(singleVal => {
+      if (singleVal.rows.length !== 0) {
+        res.send(singleVal.rows);
+      } else {
+        throw new Error(
+          next({ message: `id ${id} is not found`, statusCode: 404 })
+        );
+      }
+    })
+    .catch(err => {
+      return next({ message: `${err} in query`, statusCode: 400 });
+    });
 };
 
 const addNewPost = (req, res) => {

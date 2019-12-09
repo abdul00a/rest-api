@@ -1,12 +1,19 @@
 const { client } = require('../utils/connection');
 
-const getPosts = async () => {
-  const authorObj = await client.query('select * from posttbl');
-  return authorObj.rows;
+const getPosts = () => {
+  try {
+    return client.query('select * from posttbl');
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const getPostsById = id => {
-  return client.query('select * from posttbl where id = $1', [id]);
+  try {
+    return client.query('select * from author where id = $1', [id]);
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const insertPost = value => {
