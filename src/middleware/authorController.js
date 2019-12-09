@@ -62,9 +62,13 @@ const updateAuthors = (req, res, next) => {
     });
 };
 
-const deleteAuthors = (req, res) => {
+const deleteAuthors = (req, res, next) => {
   const { id } = req.params;
-  deleteAuthor(id).then(() => res.send('delete Author successfully'));
+  deleteAuthor(id)
+    .then(() => res.send('delete Author successfully'))
+    .catch(err => {
+      return next({ message: `${err}`, statusCode: 400 });
+    });
 };
 
 module.exports = {

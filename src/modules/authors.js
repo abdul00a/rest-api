@@ -36,9 +36,19 @@ const updateAuthor = value => {
 };
 
 const deleteAuthor = async id => {
-  const deldata = await client.query('delete from author where id = $1', [id]);
-  await client.query('delete from posttbl where refid = $1', [id]);
-  return deldata;
+  try {
+    const singleAuthorObj = await getAuthorById(id);
+    if (singleAuthorObj.rows.length !== 0) {
+      const deldata = await client.query('delete from author where id = $1', [
+        id
+      ]);
+      await client.query('delete from posttbl where refid = $1', [id]);
+      return deldata;
+    }
+    throw new Error('Data is already deleted');
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 module.exports = {
