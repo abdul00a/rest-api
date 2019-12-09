@@ -1,12 +1,19 @@
 const { client } = require('../utils/connection');
 
-const getAuthor = async () => {
-  const authorObj = await client.query('select * from author');
-  return authorObj.rows;
+const getAuthor = () => {
+  try {
+    return client.query('select * from author');
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const getAuthorById = id => {
-  return client.query('select * from author where id = $1', [id]);
+  try {
+    return client.query('select * from author where id = $1', [id]);
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const insertAuthor = value => {
