@@ -25,10 +25,14 @@ const insertAuthor = value => {
 };
 
 const updateAuthor = value => {
-  return client.query(
-    'update author set authorname = $1 ,authoremail = $2, numofpost = $3 where id = $4',
-    value
-  );
+  try {
+    return client.query(
+      'update author set authorname = $1 ,authoremail = $2, numofpost = $3 where id = $4',
+      value
+    );
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const deleteAuthor = async id => {

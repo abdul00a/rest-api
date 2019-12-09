@@ -51,11 +51,15 @@ const addAuthors = (req, res, next) => {
     });
 };
 
-const updateAuthors = (req, res) => {
+const updateAuthors = (req, res, next) => {
   const { id } = req.params;
   const updatVal = Object.values(req.body);
   const val = [...updatVal, id];
-  updateAuthor(val).then(() => res.send('update the author values'));
+  updateAuthor(val)
+    .then(() => res.send('update the author values'))
+    .catch(err => {
+      return next({ message: `${err} in query`, statusCode: 400 });
+    });
 };
 
 const deleteAuthors = (req, res) => {
