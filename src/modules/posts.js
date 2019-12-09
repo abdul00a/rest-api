@@ -10,14 +10,18 @@ const getPosts = () => {
 
 const getPostsById = id => {
   try {
-    return client.query('select * from author where id = $1', [id]);
+    return client.query('select * from posttbl where id = $1', [id]);
   } catch (error) {
     throw new Error(error);
   }
 };
 
 const insertPost = value => {
-  return client.query('insert into posttbl values ($1, $2, $3)', value);
+  try {
+    return client.query('insert into posttbl values ($1, $2, $3)', value);
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const updatePosts = value => {

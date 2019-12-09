@@ -42,9 +42,13 @@ const getpostById = (req, res, next) => {
     });
 };
 
-const addNewPost = (req, res) => {
+const addNewPost = (req, res, next) => {
   const val = Object.values(req.body);
-  insertPost(val).then(() => res.send('New post will be added successfully'));
+  insertPost(val)
+    .then(() => res.send('New post will be added successfully'))
+    .catch(err => {
+      return next({ message: `${err} in query`, statusCode: 400 });
+    });
 };
 
 const updatePost = (req, res) => {
