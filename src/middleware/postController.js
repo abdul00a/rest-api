@@ -51,11 +51,15 @@ const addNewPost = (req, res, next) => {
     });
 };
 
-const updatePost = (req, res) => {
+const updatePost = (req, res, next) => {
   const { id } = req.params;
   const updatVal = Object.values(req.body);
   const val = [...updatVal, id];
-  updatePosts(val).then(() => res.send('update the post name'));
+  updatePosts(val)
+    .then(() => res.send('update the post name'))
+    .catch(err => {
+      return next({ message: `${err} in query`, statusCode: 400 });
+    });
 };
 
 const deletePost = (req, res) => {

@@ -25,7 +25,11 @@ const insertPost = value => {
 };
 
 const updatePosts = value => {
-  return client.query('update posttbl set posts = $1 where id = $2', value);
+  try {
+    return client.query('update posttbl set posts = $1 where id = $2', value);
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const del = id => {
