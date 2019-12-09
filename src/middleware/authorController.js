@@ -42,9 +42,13 @@ const getUsersById = (req, res, next) => {
     });
 };
 
-const addAuthors = (req, res) => {
+const addAuthors = (req, res, next) => {
   const val = Object.values(req.body);
-  insertAuthor(val).then(() => res.send('Author will be added successfully'));
+  insertAuthor(val)
+    .then(() => res.send('Author will be added successfully'))
+    .catch(err => {
+      return next({ message: `${err} in query`, statusCode: 400 });
+    });
 };
 
 const updateAuthors = (req, res) => {

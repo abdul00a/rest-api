@@ -17,7 +17,11 @@ const getAuthorById = id => {
 };
 
 const insertAuthor = value => {
-  return client.query('insert into author values ($1, $2, $3, $4)', value);
+  try {
+    return client.query('insert into author values ($1, $2, $3, $4)', value);
+  } catch (error) {
+    throw new Error(error);
+  }
 };
 
 const updateAuthor = value => {
