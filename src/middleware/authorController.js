@@ -12,16 +12,14 @@ const getUsers = (req, res, next) => {
       if (allVal.rows.length !== 0) {
         res.send(allVal.rows);
       } else {
-        throw new Error(
-          next({
-            message: 'Right now there is no Author is avilable',
-            statusCode: 404
-          })
-        );
+        next({
+          message: 'Right now there is no Author is avilable',
+          statusCode: 404
+        });
       }
     })
     .catch(err => {
-      return next({ message: `${err} in query`, statusCode: 400 });
+      next({ message: err.message, statusCode: 400 });
     });
 };
 
@@ -32,13 +30,11 @@ const getUsersById = (req, res, next) => {
       if (singleVal.rows.length !== 0) {
         res.send(singleVal.rows);
       } else {
-        throw new Error(
-          next({ message: `id ${id} is not found`, statusCode: 404 })
-        );
+        next({ message: `id ${id} is not found`, statusCode: 404 });
       }
     })
     .catch(err => {
-      return next({ message: `${err} in query`, statusCode: 400 });
+      next({ message: err.message, statusCode: 400 });
     });
 };
 
@@ -47,7 +43,7 @@ const addAuthors = (req, res, next) => {
   insertAuthor(val)
     .then(() => res.send('Author will be added successfully'))
     .catch(err => {
-      return next({ message: `${err} in query`, statusCode: 400 });
+      next({ message: err.message, statusCode: 400 });
     });
 };
 
@@ -58,7 +54,7 @@ const updateAuthors = (req, res, next) => {
   updateAuthor(val)
     .then(() => res.send('update the author values'))
     .catch(err => {
-      return next({ message: `${err} in query`, statusCode: 400 });
+      next({ message: err.message, statusCode: 400 });
     });
 };
 
@@ -67,7 +63,7 @@ const deleteAuthors = (req, res, next) => {
   deleteAuthor(id)
     .then(() => res.send('delete Author successfully'))
     .catch(err => {
-      return next({ message: `${err}`, statusCode: 400 });
+      next({ message: err.message, statusCode: 400 });
     });
 };
 

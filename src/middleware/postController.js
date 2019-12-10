@@ -12,16 +12,14 @@ const getAllPost = (req, res, next) => {
       if (allVal.rows.length !== 0) {
         res.send(allVal.rows);
       } else {
-        throw new Error(
-          next({
-            message: 'Right now there is no Author is avilable',
-            statusCode: 404
-          })
-        );
+        next({
+          message: 'Right now there is no Post is avilable',
+          statusCode: 404
+        });
       }
     })
     .catch(err => {
-      return next({ message: `${err} in query`, statusCode: 400 });
+      next({ message: err.message, statusCode: 400 });
     });
 };
 
@@ -32,13 +30,11 @@ const getpostById = (req, res, next) => {
       if (singleVal.rows.length !== 0) {
         res.send(singleVal.rows);
       } else {
-        throw new Error(
-          next({ message: `id ${id} is not found`, statusCode: 404 })
-        );
+        next({ message: `id ${id} is not found`, statusCode: 404 });
       }
     })
     .catch(err => {
-      return next({ message: `${err} in query`, statusCode: 400 });
+      next({ message: err.message, statusCode: 400 });
     });
 };
 
@@ -47,7 +43,7 @@ const addNewPost = (req, res, next) => {
   insertPost(val)
     .then(() => res.send('New post will be added successfully'))
     .catch(err => {
-      return next({ message: `${err} in query`, statusCode: 400 });
+      next({ message: err.message, statusCode: 400 });
     });
 };
 
@@ -58,7 +54,7 @@ const updatePost = (req, res, next) => {
   updatePosts(val)
     .then(() => res.send('update the post name'))
     .catch(err => {
-      return next({ message: `${err} in query`, statusCode: 400 });
+      next({ message: err.message, statusCode: 400 });
     });
 };
 
@@ -67,7 +63,7 @@ const deletePost = (req, res, next) => {
   del(id)
     .then(() => res.send('delete post successfully'))
     .catch(err => {
-      return next({ message: `${err}`, statusCode: 400 });
+      next({ message: err.message, statusCode: 400 });
     });
 };
 
