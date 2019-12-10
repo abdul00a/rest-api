@@ -26,7 +26,9 @@ const deleteAuthor = async id => {
     deldata = await client.query('delete from author where id = $1', [id]);
     await client.query('delete from posttbl where refid = $1', [id]);
   } else {
-    throw new Error('Data is already deleted');
+    throw new Error(
+      `Either a given id ${id} is not avilable in table or may be deleted `
+    );
   }
   return deldata;
 };

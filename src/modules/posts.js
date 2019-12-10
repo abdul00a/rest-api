@@ -22,7 +22,9 @@ const del = async id => {
   if (singlePostObj.rows.length !== 0) {
     deldata = await client.query('delete from psttbl where id = $1', [id]);
   } else {
-    throw new Error('Data is already deleted');
+    throw new Error(
+      `Either a given id ${id} is not avilable in table or may be deleted `
+    );
   }
   return deldata;
 };
