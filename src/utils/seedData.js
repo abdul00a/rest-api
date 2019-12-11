@@ -39,7 +39,7 @@ async function createTables1(data) {
   try {
     await client.query('DROP TABLE IF EXISTS postTbl CASCADE');
     await client.query(
-      'CREATE TABLE postTbl (id INT,refID INT,posts VARCHAR(60))'
+      'CREATE TABLE postTbl (id INT PRIMARY KEY,refID INT REFERENCES author(id) ,posts VARCHAR(60))'
     );
     await Promise.all(
       data.map((ele, i) => insertData1([i + 1, ele.refId, ele.postName]))

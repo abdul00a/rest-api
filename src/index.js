@@ -3,21 +3,26 @@ const express = require('express');
 const { router } = require('./routes/routerIndex');
 const { client } = require('./utils/connection');
 
-const app = express();
+client
+  .connect()
+  .then(() => {
+    const app = express();
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: false }));
 
-client.connect();
+    // End point router
+    app.use('/', router);
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+    // Error Handeler
+    // eslint-disable-next-line no-unused-vars
+    app.use((err, req, res, next) => {
+      res.status(err.statusCode).send({ error: err.message });
+    });
 
-// End point router
-app.use('/', router);
-
-// Error Handeler
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
-  res.status(err.statusCode).send({ error: err.message });
-});
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log(`server on port ${port}`));
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => console.log(`server on port ${port}`));
+  })
+  .catch(err => {
+    console.log(err.message);
+    process.kill('');
+  });
