@@ -1,5 +1,7 @@
+// import Joi method from joi package
 const Joi = require('joi');
 
+// validation function for users by id
 const usersByIDvalidation = req => {
   const { id } = req;
   const schema = {
@@ -9,6 +11,7 @@ const usersByIDvalidation = req => {
   return [id, result];
 };
 
+// validation function to insert new data in author table
 const insertNewAuthorValidation = req => {
   const schema = {
     id: Joi.number().required(),
@@ -23,6 +26,7 @@ const insertNewAuthorValidation = req => {
   return Joi.validate(req, schema);
 };
 
+// validation function to update author in author table
 const updateAuthorValidation = body => {
   const schema = {
     authorname: Joi.string()
@@ -36,6 +40,7 @@ const updateAuthorValidation = body => {
   return Joi.validate(body, schema);
 };
 
+// validation function to insert new data in posts table
 const NewPostValidation = req => {
   const schema = {
     id: Joi.number().required(),
@@ -47,6 +52,7 @@ const NewPostValidation = req => {
   return Joi.validate(req, schema);
 };
 
+// validation function to update posts in posts table
 const updatePostValidation = body => {
   const schema = {
     posts: Joi.string()
@@ -56,6 +62,7 @@ const updatePostValidation = body => {
   return Joi.validate(body, schema);
 };
 
+// export validation function
 module.exports = {
   usersByIDvalidation,
   insertNewAuthorValidation,

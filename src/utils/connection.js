@@ -1,5 +1,7 @@
+// import Client funtion from postgres SQL
 const { Client } = require('pg');
 
+// Establish a connection from database
 const client = new Client({
   user: 'api',
   password: 'api123',
@@ -8,6 +10,7 @@ const client = new Client({
   database: 'users'
 });
 
+// export client connection
 module.exports = {
   client
 };

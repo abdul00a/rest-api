@@ -1,3 +1,4 @@
+// import modules functions for author table
 const {
   getAuthor,
   getAuthorById,
@@ -6,12 +7,14 @@ const {
   deleteAuthor
 } = require('../modules/authors');
 
+// import validation function
 const {
   usersByIDvalidation,
   insertNewAuthorValidation,
   updateAuthorValidation
 } = require('../utils/validation');
 
+// GET request middleware function for all authors
 const getUsers = (req, res, next) => {
   getAuthor()
     .then(allVal => {
@@ -29,6 +32,7 @@ const getUsers = (req, res, next) => {
     });
 };
 
+// GET request middleware function for one authors
 const getUsersById = (req, res, next) => {
   const [id, validate] = usersByIDvalidation(req.params);
   if (validate.error) {
@@ -48,6 +52,7 @@ const getUsersById = (req, res, next) => {
   }
 };
 
+// POST request middleware function for insert one author
 const addAuthors = (req, res, next) => {
   const { error } = insertNewAuthorValidation(req.body);
   const val = Object.values(req.body);
@@ -62,6 +67,7 @@ const addAuthors = (req, res, next) => {
   }
 };
 
+// PUT request middleware function for update one author
 const updateAuthors = async (req, res, next) => {
   const [id, validate] = usersByIDvalidation(req.params);
   const { error } = updateAuthorValidation(req.body);
@@ -88,6 +94,7 @@ const updateAuthors = async (req, res, next) => {
   }
 };
 
+// DELETE request middleware function for delete one author
 const deleteAuthors = (req, res, next) => {
   const [id, validate] = usersByIDvalidation(req.params);
   if (validate.error) {
@@ -101,6 +108,7 @@ const deleteAuthors = (req, res, next) => {
   }
 };
 
+// Export alll middleware function
 module.exports = {
   getUsers,
   getUsersById,

@@ -1,3 +1,4 @@
+// import module functions for post table
 const {
   getPosts,
   getPostsById,
@@ -6,12 +7,14 @@ const {
   del
 } = require('../modules/posts');
 
+// import validation function
 const {
   usersByIDvalidation,
   NewPostValidation,
   updatePostValidation
 } = require('../utils/validation');
 
+// GET request middleware function for all Posts
 const getAllPost = (req, res, next) => {
   getPosts()
     .then(allVal => {
@@ -29,6 +32,7 @@ const getAllPost = (req, res, next) => {
     });
 };
 
+// GET request middleware function for one Posts
 const getpostById = (req, res, next) => {
   const [id, validate] = usersByIDvalidation(req.params);
   if (validate.error) {
@@ -48,6 +52,7 @@ const getpostById = (req, res, next) => {
   }
 };
 
+// POST request middleware function for insert one Posts
 const addNewPost = (req, res, next) => {
   const val = Object.values(req.body);
   const { error } = NewPostValidation(req.body);
@@ -62,6 +67,7 @@ const addNewPost = (req, res, next) => {
   }
 };
 
+// PUT request middleware function for update one Posts
 const updatePost = async (req, res, next) => {
   const [id, validate] = usersByIDvalidation(req.params);
   const { error } = updatePostValidation(req.body);
@@ -88,6 +94,7 @@ const updatePost = async (req, res, next) => {
   }
 };
 
+// DELETE request middleware function for delete one Posts
 const deletePost = (req, res, next) => {
   const [id, validate] = validateID(req.params);
   if (validate.error) {
@@ -101,6 +108,7 @@ const deletePost = (req, res, next) => {
   }
 };
 
+// Export alll middleware function
 module.exports = {
   getAllPost,
   getpostById,
