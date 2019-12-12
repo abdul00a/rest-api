@@ -11,7 +11,18 @@ const usersByIDvalidation = req => {
   return [id, result];
 };
 
-// validation function to insert new data in author table
+// validate author id and post id
+const validationAuthorIDpostID = req => {
+  const { id, postid } = req;
+  const schema = {
+    id: Joi.number().required(),
+    postid: Joi.number().required()
+  };
+  const result = Joi.validate(req, schema);
+  return [id, postid, result];
+};
+
+// validation function to insert new author data in author table
 const insertNewAuthorValidation = req => {
   const schema = {
     id: Joi.number().required(),
@@ -26,7 +37,7 @@ const insertNewAuthorValidation = req => {
   return Joi.validate(req, schema);
 };
 
-// validation function to update author in author table
+// validation function to update author data in author table
 const updateAuthorValidation = body => {
   const schema = {
     authorname: Joi.string()
@@ -40,10 +51,10 @@ const updateAuthorValidation = body => {
   return Joi.validate(body, schema);
 };
 
-// validation function to insert new data in posts table
+// validation function to insert new posts data in posts table
 const NewPostValidation = req => {
   const schema = {
-    id: Joi.number().required(),
+    postid: Joi.number().required(),
     refid: Joi.number().required(),
     posts: Joi.string()
       .min(5)
@@ -52,7 +63,7 @@ const NewPostValidation = req => {
   return Joi.validate(req, schema);
 };
 
-// validation function to update posts in posts table
+// validation function to update posts data in posts table
 const updatePostValidation = body => {
   const schema = {
     posts: Joi.string()
@@ -65,6 +76,7 @@ const updatePostValidation = body => {
 // export validation function
 module.exports = {
   usersByIDvalidation,
+  validationAuthorIDpostID,
   insertNewAuthorValidation,
   updateAuthorValidation,
   NewPostValidation,
