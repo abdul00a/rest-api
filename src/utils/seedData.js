@@ -1,14 +1,18 @@
+// import faker function and client function
 const faker = require('faker');
 const { client } = require('./connection');
 
+// insert query for post table
 function insertData1(value) {
   return client.query('INSERT INTO postTbl VALUES ($1, $2, $3)', value);
 }
 
+// insert query for author table
 function insertData(value) {
   return client.query('INSERT INTO author VALUES ($1, $2, $3, $4)', value);
 }
 
+// create table for author
 async function createTables(fakeData) {
   try {
     await client.query('DROP TABLE IF EXISTS author CASCADE');
@@ -30,11 +34,12 @@ async function createTables(fakeData) {
   }
 }
 
+// create table for posts
 async function createTables1(data) {
   try {
     await client.query('DROP TABLE IF EXISTS postTbl CASCADE');
     await client.query(
-      'CREATE TABLE postTbl (id INT,refID INT,posts VARCHAR(60))'
+      'CREATE TABLE postTbl (id INT PRIMARY KEY,refID INT REFERENCES author(id) ,posts VARCHAR(60))'
     );
     await Promise.all(
       data.map((ele, i) => insertData1([i + 1, ele.refId, ele.postName]))
@@ -44,6 +49,7 @@ async function createTables1(data) {
   }
 }
 
+// generate fake data for authors
 function fakeAuthors(numOfFakeData) {
   const fakeDetails = [];
   try {
@@ -61,6 +67,7 @@ function fakeAuthors(numOfFakeData) {
   return fakeDetails;
 }
 
+// generate fake data for Posts
 async function fakePosts() {
   const fakeDetails = [];
   try {
@@ -88,6 +95,7 @@ async function fakePosts() {
   return fakeDetails;
 }
 
+// main function for creating a table for author and post
 async function main() {
   try {
     await client.connect();
@@ -98,4 +106,5 @@ async function main() {
     console.log(error);
   }
 }
+
 main();

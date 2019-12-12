@@ -14,7 +14,9 @@
   "dependencies": {
     "express": "^4.17.1",
     "faker": "^4.1.0",
-    "pg": "^7.14.0"
+    "joi": "^14.3.1",
+    "pg": "^7.14.0",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "eslint": "^6.1.0",
