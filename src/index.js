@@ -10,10 +10,13 @@ client
     const app = express();
     app.use(express.json());
 
+    // winston info logger
     app.use(log);
     // End point router
     app.use('/', authorRouter);
     app.use('/author', postRouter);
+
+    // winston error logger
     app.use(error);
 
     // router for all end point validation
