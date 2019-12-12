@@ -22,7 +22,7 @@ const getUsers = (req, res, next) => {
         res.send(allVal.rows);
       } else {
         next({
-          message: 'oppsss somthing worng please check again....',
+          message: 'ooppsss somthing worng please check again URL....',
           statusCode: 404
         });
       }
@@ -43,7 +43,7 @@ const getUsersById = (req, res, next) => {
         if (singleVal.rows.length !== 0) {
           res.send(singleVal.rows);
         } else {
-          next({ message: `id ${id} is not found`, statusCode: 404 });
+          next({ message: `Id ${id} is not found`, statusCode: 404 });
         }
       })
       .catch(err => {
@@ -87,7 +87,7 @@ const updateAuthors = async (req, res, next) => {
         });
     } else {
       next({
-        message: `This ${id} id is not avilable in author table. please try different id to update`,
+        message: `This ${id} id is not available in author table. please try different id to update`,
         statusCode: 404
       });
     }
@@ -95,16 +95,28 @@ const updateAuthors = async (req, res, next) => {
 };
 
 // DELETE request middleware function for delete one author
-const deleteAuthors = (req, res, next) => {
+const deleteAuthors = async (req, res, next) => {
   const [id, validate] = usersByIDvalidation(req.params);
   if (validate.error) {
     next({ message: validate.error.details[0].message, statusCode: 400 });
   } else {
-    deleteAuthor(id)
-      .then(() => res.send('delete Author successfully'))
-      .catch(err => {
-        next({ message: err.message, statusCode: 400 });
-      });
+    try {
+      const singleAuthorObj = await getAuthorById(id);
+      if (singleAuthorObj.rows.length !== 0) {
+        deleteAuthor(id)
+          .then(() => res.send('delete Author successfully'))
+          .catch(err => {
+            next({ message: err.message, statusCode: 400 });
+          });
+      } else {
+        next({
+          message: `Either a given author id ${id} is not available in table or may be deleted `,
+          statusCode: 404
+        });
+      }
+    } catch (error) {
+      next({ message: error.message, statusCode: 400 });
+    }
   }
 };
 

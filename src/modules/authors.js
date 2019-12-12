@@ -1,5 +1,5 @@
 // import client connection
-const { client } = require('../utils/connection');
+const { client } = require('../utils/config');
 
 // return all authors
 const getAuthor = () => {
@@ -26,17 +26,7 @@ const updateAuthor = value => {
 
 // delete author from author table and delete posts corresponding to author
 const deleteAuthor = async id => {
-  const singleAuthorObj = await getAuthorById(id);
-  let deldata;
-  if (singleAuthorObj.rows.length !== 0) {
-    deldata = await client.query('delete from author where id = $1', [id]);
-    await client.query('delete from posttbl where refid = $1', [id]);
-  } else {
-    throw new Error(
-      `Either a given id ${id} is not avilable in table or may be deleted `
-    );
-  }
-  return deldata;
+  return client.query('delete from author where id = $1', [id]);
 };
 
 // export CURD query functions of author

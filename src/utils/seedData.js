@@ -1,6 +1,6 @@
 // import faker function and client function
 const faker = require('faker');
-const { client } = require('./connection');
+const { client } = require('./config');
 
 // insert query for post table
 function insertData1(value) {
@@ -39,7 +39,7 @@ async function createTables1(data) {
   try {
     await client.query('DROP TABLE IF EXISTS postTbl CASCADE');
     await client.query(
-      'CREATE TABLE postTbl (id INT PRIMARY KEY,refID INT REFERENCES author(id) ,posts VARCHAR(60))'
+      'CREATE TABLE postTbl (postID INT PRIMARY KEY,refID INT REFERENCES author(id) ON DELETE CASCADE, posts VARCHAR(60))'
     );
     await Promise.all(
       data.map((ele, i) => insertData1([i + 1, ele.refId, ele.postName]))
@@ -95,11 +95,11 @@ async function fakePosts() {
   return fakeDetails;
 }
 
-// main function for creating a table for author and post
+// main function for creating a table for author & post
 async function main() {
   try {
     await client.connect();
-    await createTables(await fakeAuthors(5));
+    await createTables(await fakeAuthors(10));
     await createTables1(await fakePosts());
     await client.end();
   } catch (error) {
