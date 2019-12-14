@@ -13,7 +13,7 @@ const {
   validationAuthorIDpostID,
   NewPostValidation,
   updatePostValidation
-} = require('../utils/validation');
+} = require('../middleware/validation');
 
 // GET request middleware function for all Posts
 const getAllPost = (req, res, next) => {
@@ -130,6 +130,7 @@ const deletePost = async (req, res, next) => {
           message: `Either a given post id ${postid} is not avilable in table or may be deleted `,
           statusCode: 404
         });
+        return;
       }
     } catch (error) {
       next({ message: error.message, statusCode: 400 });

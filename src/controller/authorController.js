@@ -12,7 +12,7 @@ const {
   usersByIDvalidation,
   insertNewAuthorValidation,
   updateAuthorValidation
-} = require('../utils/validation');
+} = require('../middleware/validation');
 
 // GET request middleware function for all authors
 const getUsers = (req, res, next) => {
@@ -113,6 +113,7 @@ const deleteAuthors = async (req, res, next) => {
           message: `Either a given author id ${id} is not available in table or may be deleted `,
           statusCode: 404
         });
+        return;
       }
     } catch (error) {
       next({ message: error.message, statusCode: 400 });

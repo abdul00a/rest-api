@@ -63,6 +63,16 @@ const NewPostValidation = req => {
   return Joi.validate(req, schema);
 };
 
+const PostValidationOrm = req => {
+  const schema = {
+    postid: Joi.number().required(),
+    posts: Joi.string()
+      .min(5)
+      .required(),
+    authorid: Joi.number().required()
+  };
+  return Joi.validate(req, schema);
+};
 // validation function to update posts data in posts table
 const updatePostValidation = body => {
   const schema = {
@@ -80,5 +90,6 @@ module.exports = {
   insertNewAuthorValidation,
   updateAuthorValidation,
   NewPostValidation,
-  updatePostValidation
+  updatePostValidation,
+  PostValidationOrm
 };

@@ -1,6 +1,6 @@
 // import faker function and client function
 const faker = require('faker');
-const { client } = require('./config');
+const { client } = require('../config/config');
 
 // insert query for post table
 function insertData1(value) {
@@ -75,12 +75,12 @@ async function fakePosts() {
     const count = await client.query('select * from author');
     let numOFdata = count.rowCount;
     while (numOFdata) {
-      const data = {};
       const numPost = await client.query(
         `select numofpost as post from author where id = ${authorID}`
       );
       let numPostVal = +numPost.rows[0].post;
       while (numPostVal) {
+        const data = {};
         data.refId = authorID;
         data.postName = faker.random.words();
         numPostVal--;

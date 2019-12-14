@@ -1,5 +1,5 @@
 // import client connection
-const { client } = require('../utils/config');
+const { client } = require('../config/config');
 
 // return all Posts corresponding to one author
 const getPosts = id => {
@@ -12,6 +12,10 @@ const getPostsById = (id, postid) => {
     'select posttbl.postid,posttbl.refid,posttbl.posts from posttbl inner join author on posttbl.refid = $1 where postid = $2 limit 1;',
     [id, postid]
   );
+  // return client.query(
+  //   'select posttbl.postid,posttbl.refid,posttbl.posts from posttbl inner join author on posttbl.refid = author.id where author.id=$1 and posttbl.postid=$2',
+  //   [id, postid]
+  // );
 };
 
 // insert Post in Post table corresponding to author id

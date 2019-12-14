@@ -1,5 +1,5 @@
 // import client connection
-const { client } = require('../utils/config');
+const { client } = require('../config/config');
 
 // return all authors
 const getAuthor = () => {
