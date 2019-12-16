@@ -136,7 +136,8 @@ const login = async (req, res, next) => {
   const token = jwt.sign(
     // eslint-disable-next-line no-underscore-dangle
     { _id: user.dataValues.id },
-    process.env.TOKEN_SECRET
+    process.env.TOKEN_SECRET,
+    { expiresIn: 60 * 60 }
   );
   res.header('auth-token', token).send(token);
 };
