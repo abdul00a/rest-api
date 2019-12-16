@@ -1,3 +1,4 @@
+// post table schema
 module.exports = (sequelize, Datatype) => {
   const post = sequelize.define(
     'postorm',

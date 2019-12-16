@@ -1,4 +1,5 @@
 const express = require('express');
+const dotenv = require('dotenv');
 // import routes
 const { authorRouter } = require('./routes/authorRouter');
 const { postRouter } = require('./routes/postRouter');
@@ -6,18 +7,14 @@ const { postRouter } = require('./routes/postRouter');
 const { client } = require('./config/config'); // import pg client
 const { error, log } = require('./middleware/logging'); // import logger
 const { errorHandler } = require('../src/middleware/errormiddelware'); // error route
-const { sequelize } = require('../src/utils/db'); // import sequlize connection
+const { sequelize } = require('./config/db'); // import sequlize connection
 
+dotenv.config();
+
+process.on('unhandledRejection', err => {
+  console.log('unhandledRejection', err.message);
+});
 // connect to postgres DB with sequlize
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Connection has been established successfully.');
-  })
-  .catch(err => {
-    console.error('Unable to connect to the database:');
-    process.kill('');
-  });
 
 // connect to postgres DB without sequlize
 // client
@@ -47,8 +44,18 @@ app.all('*', (req, res, next) => {
 // Error Handeler Middlewares
 app.use(errorHandler);
 
-const port = process.env.PORT || 4000;
-app.listen(port, () => console.log(`server on port ${port}`));
+const port = process.env.PORT || 3000;
+
+sequelize
+  .authenticate()
+  .then(() => {
+    app.listen(port, () => console.log(`server on port ${port}`));
+    console.log('Connection has been established successfully.');
+  })
+  .catch(() => {
+    console.error('Unable to connect to the database:');
+    process.kill('');
+  });
 // })
 // .catch(err => {
 //   console.log(err.message);

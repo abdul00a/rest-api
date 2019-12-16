@@ -1,3 +1,4 @@
+// author table schema
 module.exports = (sequelize, Datatype) => {
   const author = sequelize.define(
     'authororm',

@@ -1,3 +1,4 @@
+// admin table schema
 module.exports = (sequelize, Datatype) => {
   const user = sequelize.define(
     'users',

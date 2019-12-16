@@ -1,5 +1,6 @@
 // import Router function from express
 const { Router } = require('express');
+const { auth } = require('../utils/verifyToken');
 
 // import controller function of Posts without sequlize.
 const {
@@ -22,6 +23,7 @@ const {
 const postRouter = Router();
 
 // router handler for author post without ORM
+
 // postRouter.get('/:id/posts/', getAllPost);
 // postRouter.get('/:id/posts/:postid', getpostById);
 // postRouter.post('/:id/posts/', addNewPost);
@@ -29,11 +31,11 @@ const postRouter = Router();
 // postRouter.delete('/:id/posts/:postid', deletePost);
 
 // router handler for author post with ORM
-postRouter.get('/:id/posts/', allPostOfOneAuthor);
-postRouter.get('/:id/posts/:postid', onePostOfOneAuthor);
-postRouter.post('/:id/posts/', insertPost);
-postRouter.put('/:id/posts/:postid', updatepost);
-postRouter.delete('/:id/posts/:postid', deletePosts);
+postRouter.get('/:id/posts/', auth, allPostOfOneAuthor);
+postRouter.get('/:id/posts/:postid', auth, onePostOfOneAuthor);
+postRouter.post('/:id/posts/', auth, insertPost);
+postRouter.put('/:id/posts/:postid', auth, updatepost);
+postRouter.delete('/:id/posts/:postid', auth, deletePosts);
 
 // export router handler
 module.exports = {

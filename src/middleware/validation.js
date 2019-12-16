@@ -63,6 +63,7 @@ const NewPostValidation = req => {
   return Joi.validate(req, schema);
 };
 
+// validation for post table
 const PostValidationOrm = req => {
   const schema = {
     postid: Joi.number().required(),
@@ -83,6 +84,19 @@ const updatePostValidation = body => {
   return Joi.validate(body, schema);
 };
 
+// validation for login
+const emailAndPassword = body => {
+  const schema = {
+    username: Joi.string()
+      .min(5)
+      .required(),
+    password: Joi.string()
+      .min(5)
+      .required()
+  };
+  return Joi.validate(body, schema);
+};
+
 // export validation function
 module.exports = {
   usersByIDvalidation,
@@ -91,5 +105,6 @@ module.exports = {
   updateAuthorValidation,
   NewPostValidation,
   updatePostValidation,
-  PostValidationOrm
+  PostValidationOrm,
+  emailAndPassword
 };

@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize');
 
-const { sequelize } = require('../../utils/db');
+const { sequelize } = require('../../config/db');
 
+// model for all 3 table
 const models = {
   author: sequelize.import('./author'),
   post: sequelize.import('./post'),

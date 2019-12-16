@@ -1,16 +1,24 @@
-const { models } = require('../../modules/ormModel');
+const dotenv = require('dotenv');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { models } = require('../../modules/ormModel'); // import sequlize model
 
+dotenv.config();
+
+// import validation schema
 const {
   insertNewAuthorValidation,
-  updateAuthorValidation
+  updateAuthorValidation,
+  emailAndPassword
 } = require('../../middleware/validation');
 
+// GET request for all Author
 const getAlldata = (req, res, next) => {
   models.author
     .findAll()
     .then(result => {
       if (!result) {
-        next({ message: 'Right now table is empty', statusCode: 404 });
+        next({ message: 'Right now there is no authors', statusCode: 404 });
         return;
       }
       res.send(result);
@@ -18,13 +26,14 @@ const getAlldata = (req, res, next) => {
     .catch(err => next({ message: err.message, statusCode: 400 }));
 };
 
+// GET request for one Author
 const getByid = (req, res, next) => {
   const { id } = req.params;
   models.author
     .findByPk(id)
     .then(result => {
       if (!result) {
-        next({ message: 'Given id is not avilable', statusCode: 404 });
+        next({ message: 'Given author id is not Exist', statusCode: 404 });
         return;
       }
       res.send(result.dataValues);
@@ -32,30 +41,28 @@ const getByid = (req, res, next) => {
     .catch(err => next({ message: err.message, statusCode: 404 }));
 };
 
+// POST request for Add author
 const addAuthor = async (req, res, next) => {
   const { error } = insertNewAuthorValidation(req.body);
   if (error) {
     next({ message: error.details[0].message, statusCode: 400 });
     return;
   }
-  const idExit = await models.author.findOne({ id: req.body.id });
-  if (idExit) {
-    next({ message: 'Author ID is already Exist', statusCode: 400 });
-    return;
-  }
+
   models.author
     .create(req.body)
     .then(() => res.send('Author will be added successfully'))
     .catch(err => next({ message: err.parent.detail, statusCode: 400 }));
 };
 
+// PUT request for update author
 const update = (req, res, next) => {
   const { id } = req.params;
   models.author
     .findByPk(id)
     .then(result => {
       if (!result) {
-        next({ message: 'Given id is not avilable', statusCode: 404 });
+        next({ message: 'Given author id is not Exist', statusCode: 404 });
         return;
       }
       const { error } = updateAuthorValidation(req.body);
@@ -80,6 +87,7 @@ const update = (req, res, next) => {
     .catch(err => next({ message: err.message, statusCode: 404 }));
 };
 
+// DELETE author
 const deleteAuth = (req, res, next) => {
   const { id } = req.params;
   models.author
@@ -87,7 +95,7 @@ const deleteAuth = (req, res, next) => {
     .then(result => {
       if (!result) {
         next({
-          message: 'Given id is not avilable to delete author',
+          message: 'Given author id is not exist',
           statusCode: 404
         });
         return;
@@ -100,10 +108,45 @@ const deleteAuth = (req, res, next) => {
     .catch(err => next({ message: err.message, statusCode: 404 }));
 };
 
+// POST request for login admin
+const login = async (req, res, next) => {
+  const { error } = emailAndPassword(req.body);
+  if (error) {
+    next({ message: error.details[0].message, statusCode: 400 });
+    return;
+  }
+  const user = await models.user.findOne({
+    where: { username: req.body.username }
+  });
+  if (!user) {
+    next({ message: 'username or password invalid', statusCode: 404 });
+    return;
+  }
+  const validPass = await bcrypt.compare(
+    req.body.password,
+    user.dataValues.password
+  );
+
+  if (!validPass) {
+    next({ message: 'Invalid password', statusCode: 400 });
+    return;
+  }
+
+  // eslint-disable-next-line no-underscore-dangle
+  const token = jwt.sign(
+    // eslint-disable-next-line no-underscore-dangle
+    { _id: user.dataValues.id },
+    process.env.TOKEN_SECRET
+  );
+  res.header('auth-token', token).send(token);
+};
+
+// Export HTTP request
 module.exports = {
   getByid,
   getAlldata,
   addAuthor,
   update,
-  deleteAuth
+  deleteAuth,
+  login
 };

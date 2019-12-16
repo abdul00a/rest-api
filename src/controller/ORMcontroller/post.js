@@ -1,10 +1,13 @@
 const Sequelize = require('sequelize');
-const { models } = require('../../modules/ormModel');
+const { models } = require('../../modules/ormModel'); // import sequlize model
+
+// import validation schema
 const {
   PostValidationOrm,
   updatePostValidation
 } = require('../../middleware/validation');
 
+// GET request for all post of one author
 const allPostOfOneAuthor = (req, res, next) => {
   const { id } = req.params;
   models.author
@@ -12,7 +15,7 @@ const allPostOfOneAuthor = (req, res, next) => {
     .then(result => {
       if (!result) {
         next({
-          message: 'Given author id is not avialable',
+          message: 'Author does not exit',
           statusCode: 404
         });
         return;
@@ -34,6 +37,7 @@ const allPostOfOneAuthor = (req, res, next) => {
     .catch(err => next({ message: err.message, statusCode: 400 }));
 };
 
+// GET request for one post of one author
 const onePostOfOneAuthor = (req, res, next) => {
   const { id, postid } = req.params;
   models.author
@@ -66,7 +70,7 @@ const onePostOfOneAuthor = (req, res, next) => {
         .then(post => {
           if (post.length === 0) {
             next({
-              message: 'Given post id not avilable.........',
+              message: 'No post avilable.........',
               statusCode: 404
             });
             return;
@@ -78,24 +82,20 @@ const onePostOfOneAuthor = (req, res, next) => {
     .catch(err => next({ message: err.message, statusCode: 400 }));
 };
 
+// POST request for add one post of author
 const insertPost = (req, res, next) => {
   const { id } = req.params;
   models.author
     .findByPk(id)
     .then(async result => {
       if (!result) {
-        next({ message: 'Given id is not avilable', statusCode: 404 });
+        next({ message: 'Author id is already avialable', statusCode: 400 });
         return;
       }
       if (+req.params.id === +req.body.authorid) {
         const { error } = PostValidationOrm(req.body);
         if (error) {
           next({ message: error.details[0].message, statusCode: 400 });
-          return;
-        }
-        const idExit = await models.author.findOne({ postid: req.body.postid });
-        if (idExit) {
-          next({ message: 'postID is already Exist', statusCode: 400 });
           return;
         }
         models.post
@@ -113,6 +113,7 @@ const insertPost = (req, res, next) => {
     .catch(err => next({ message: err.message, statusCode: 404 }));
 };
 
+// DELETE request for one post
 const deletePosts = (req, res, next) => {
   const { id, postid } = req.params;
   models.author
@@ -146,9 +147,8 @@ const deletePosts = (req, res, next) => {
         .then(post => {
           if (post.length === 0) {
             next({
-              message:
-                'Given post id is already deleted or not avialable.........',
-              statusCode: 404
+              message: 'Access Denied post is not avialable.........',
+              statusCode: 401
             });
             return;
           }
@@ -162,6 +162,7 @@ const deletePosts = (req, res, next) => {
     .catch(err => next({ message: err.message, statusCode: 400 }));
 };
 
+// PUT request for update one post of author
 const updatepost = (req, res, next) => {
   const { id, postid } = req.params;
   models.author
@@ -169,8 +170,7 @@ const updatepost = (req, res, next) => {
     .then(result => {
       if (!result) {
         next({
-          message:
-            'Given author id does not have any post you can not delete post.........',
+          message: 'Given author id does not have any post.........',
           statusCode: 404
         });
         return;
@@ -195,9 +195,8 @@ const updatepost = (req, res, next) => {
         .then(post => {
           if (post.length === 0) {
             next({
-              message:
-                'Given post id is already deleted or not avialable.........',
-              statusCode: 404
+              message: 'Access Denied.........',
+              statusCode: 401
             });
             return;
           }
@@ -218,6 +217,7 @@ const updatepost = (req, res, next) => {
     .catch(err => next({ message: err.message, statusCode: 400 }));
 };
 
+// EXPORT HTTP request
 module.exports = {
   allPostOfOneAuthor,
   onePostOfOneAuthor,

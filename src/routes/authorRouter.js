@@ -1,5 +1,6 @@
 // import Router function from express
 const { Router } = require('express');
+const { auth } = require('../utils/verifyToken');
 
 // import controller function of authors with sequelize.
 const {
@@ -7,7 +8,8 @@ const {
   getAlldata,
   addAuthor,
   update,
-  deleteAuth
+  deleteAuth,
+  login
 } = require('../controller/ORMcontroller/author');
 
 // import controller function of authors without sequelize.
@@ -34,11 +36,16 @@ authorRouter.get('/', (req, res) => {
 // authorRouter.put('/author/:id', updateAuthors);
 // authorRouter.delete('/author/:id', deleteAuthors);
 
-authorRouter.get('/author', getAlldata);
-authorRouter.get('/author/:id', getByid);
-authorRouter.post('/author', addAuthor);
-authorRouter.put('/author/:id', update);
-authorRouter.delete('/author/:id', deleteAuth);
+// authorRouter handler for author with sequlize data
+
+authorRouter.get('/author', auth, getAlldata);
+authorRouter.get('/author/:id', auth, getByid);
+authorRouter.post('/author', auth, addAuthor);
+authorRouter.put('/author/:id', auth, update);
+authorRouter.delete('/author/:id', auth, deleteAuth);
+
+// router for login crenditional
+authorRouter.post('/login', login);
 
 // export router handler
 module.exports = {
